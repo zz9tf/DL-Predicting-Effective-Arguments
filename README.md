@@ -20,6 +20,18 @@ In this case, try downgrade your torchtext
 ```
 pip install torchtext==0.10.0
 ```
+Next, please install spacy since it is our default tokenizer
+```
+pip install -U pip setuptools wheel
+pip install -U spacy
+python -m spacy download en_core_web_sm
+```
+or, if you are using ARM/M1, run this:
+```
+pip install -U pip setuptools wheel
+pip install -U 'spacy[apple]'
+python -m spacy download en_core_web_sm
+```
 
 
 
