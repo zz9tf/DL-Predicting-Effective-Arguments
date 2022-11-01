@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import preprocessing as preprocess
 
-#set batch size
+# set batch size
 BATCH_SIZE = 10
 # Ratio between train datasets and validation datasets.
 split_ratio = 0.7
