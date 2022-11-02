@@ -110,7 +110,13 @@ class Fine_tune_rnn():
         return losses
 
     def evaluate_loss_acc(self, dataset="Valid", visualize=False):
-        iterator = self.valid_iterator if dataset == "Valid" else self.test_iterator
+
+        if dataset == "Valid":
+            iterator = self.valid_iterator
+        elif dataset == "Train":
+            iterator = self.train_iterator
+        else:
+            assert False, "Wrong dataset with parameter dataset {}".format(dataset)
 
         if visualize:
             # Keep track of correct guesses in a confusion matrix
