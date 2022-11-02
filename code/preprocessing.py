@@ -16,7 +16,7 @@ def load_data(BATCH_SIZE=10,
     :param data_information: True if you want to view information of training datasets (default: False)
     :return: train_iterator, valid_iterator, test_iterator, TEXT, LABEL
     """
-    TEXT = data.Field(tokenize='spacy', batch_first=True, include_lengths=True)
+    TEXT = data.Field(tokenize='spacy', batch_first=True)
     LABEL = data.LabelField(dtype=torch.float, batch_first=True)
 
     train_fields = [("discourse_id", None), ("essay_id", None), ('discourse_text', TEXT), ("discourse_type", None),
@@ -34,7 +34,6 @@ def load_data(BATCH_SIZE=10,
     train_data, valid_data = training_data.split(split_ratio=split_ratio)
     TEXT.build_vocab(train_data, min_freq=3, vectors=vectors)
     LABEL.build_vocab(train_data)
-
     if data_information:
         print("Training Data information")
         print(type(TEXT.vocab))
@@ -73,25 +72,18 @@ def load_data(BATCH_SIZE=10,
 if __name__ == "__main__":
     train_iterator, valid_iterator, test_iterator, TEXT, LABEL = load_data(BATCH_SIZE=1)
     for batch in train_iterator:
-        # print(batch.discourse_text)
-        print(batch.discourse_text[0].size())  # batch size * number of dimension
-        print(batch.discourse_text[1].size())  # batch size
+        print(batch.discourse_text.size())  # batch size * number of dimension
         # print(batch.discourse_effectiveness)
         break
     print("=" * 10)
     for batch in test_iterator:
         # print(batch.discourse_text)
-        print(batch.discourse_text[0].size())  # batch size * number of dimension
-        print(batch.discourse_text[1].size())  # batch size
+        print(batch.discourse_text.size())  # batch size * number of dimension
         # print(batch.discourse_effectiveness)
         break
 
     for batch in valid_iterator:
         # print(batch.discourse_text)
-        print(batch.discourse_text[0].size())  # batch size * number of dimension
-        print(batch.discourse_text[1].size())  # batch size
+        print(batch.discourse_text.size())  # batch size * number of dimension
         # print(batch.discourse_effectiveness)
         break
-
-
-    print(TEXT.vocab.vectors.size())
