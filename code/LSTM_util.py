@@ -27,7 +27,8 @@ class LSTMTagger(nn.Module):
         embeds = self.word_embeddings(sentence)
         lstm_out, _ = self.lstm(embeds.view(len(sentence), 1, -1))
         tag_space = self.hidden2tag(lstm_out.view(len(sentence), -1))
+        # print(tag_space.size())
         tag_scores = F.log_softmax(tag_space, dim=1)
-        print(len(tag_scores))
+        # print(tag_scores)
         # tag_scores = torch.cat((tag_score,tag_scores))
-        return tag_scores
+        return tag_scores.reshape(1,-1)
