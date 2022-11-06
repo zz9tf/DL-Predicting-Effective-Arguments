@@ -16,7 +16,7 @@ def load_data(BATCH_SIZE=10,
     :param data_information: True if you want to view information of training datasets (default: False)
     :return: train_iterator, valid_iterator, test_iterator, TEXT, LABEL
     """
-    TEXT = data.Field(tokenize='spacy', batch_first=True)
+    TEXT = data.Field(tokenize='spacy', batch_first=True, include_lengths=True)
     LABEL = data.LabelField(dtype=torch.float, batch_first=True)
 
     train_fields = [("discourse_id", None), ("essay_id", None), ('discourse_text', TEXT), ("discourse_type", None),

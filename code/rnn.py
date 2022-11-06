@@ -13,26 +13,28 @@ class RNN(torch.nn.Module):
         model_configs = kwargs.pop('model_configs')
 
         # init model attributions
-        self.input_size = model_configs['embed_len']
+        self.embedding_size = model_configs['embed_len']
         self.hidden_size = model_configs['hidden_size']
-        self.output_size = len(model_configs['target_classes'].vocab)
-        self.num_output_classes = len(model_configs['vocab'].vocab)
+        self.input_classes = len(model_configs['vocab'].vocab)
+        self.output_classes = len(model_configs['target_classes'].vocab)
+
 
         # init layers
-        self.embedding_layer = nn.Embedding(num_embeddings=self.num_output_classes, embedding_dim=self.input_size)
-        self.i2h = nn.Linear(self.input_size + self.hidden_size, self.hidden_size)
-        self.i2o = nn.Linear(self.input_size + self.hidden_size, self.output_size)
+        self.embedding_layer = nn.Embedding(num_embeddings=self.input_classes, embedding_dim=self.embedding_size)
+        # RNN input (batch_size, sequence_length, embedding_size) 
+        self.rnn = nn.RNN(
+            input_size=self.embedding_size,
+            hidden_size=self.hidden_size,
+            num_layers=1,
+            batch_first=True)
+        self.fc = nn.Linear(in_features=self.hidden_size, out_features=self.output_classes)
         self.softmax = nn.LogSoftmax(dim=-1)
 
     def forward(self, batch_x):
-        # init hidden input
-        hidden_input = torch.zeros(batch_x.shape[0], self.hidden_size)
-
-        for word_id in range(batch_x.shape[-1]):
-            embeddings = self.embedding_layer(batch_x[:, word_id])
-            combined_input = torch.cat((embeddings, hidden_input), 1)
-            hidden_input = self.i2h(combined_input)
-        output = self.i2o(combined_input)
+        output = self.embedding_layer(batch_x)
+        _, hn = self.rnn(output)  # hn: (num_layers, batch_size, hidden_size)
+        output = hn[-1]  # final layer hn: (batch_size, hidden_size)
+        output = self.fc(output)  # hidden_size => output_size
         output = self.softmax(output)
 
         return output
@@ -91,7 +93,7 @@ class Fine_tune_rnn():
             epoch_loss = []
             start_time = time.time()
             for batch in self.train_iterator:
-                X = batch.discourse_text
+                X = batch.discourse_text[0]
                 Y = batch.discourse_effectiveness.to(torch.int64)
                 Y_preds = self.model(X)
                 loss = self.loss_fn(Y_preds, Y)
@@ -125,7 +127,7 @@ class Fine_tune_rnn():
         with torch.no_grad():
             Y_shuffled, Y_preds, losses = [], [], []
             for batch in iterator:
-                X = batch.discourse_text
+                X = batch.discourse_text[0]
                 Y = batch.discourse_effectiveness.to(torch.int64)
                 Y_pred = self.model(X)
                 loss = self.loss_fn(Y_pred, Y)
@@ -167,7 +169,7 @@ class Fine_tune_rnn():
 
 if __name__ == "__main__":
     fine_rnn = Fine_tune_rnn()
-    fine_rnn.train()
+    fine_rnn.train(30)
     fine_rnn.evaluate_loss_acc(visualize=True)
 
 
