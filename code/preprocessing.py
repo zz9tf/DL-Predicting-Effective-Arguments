@@ -73,7 +73,7 @@ if __name__ == "__main__":
     train_iterator, valid_iterator, test_iterator, TEXT, LABEL = load_data(BATCH_SIZE=1)
     for batch in train_iterator:
         print(batch.discourse_text.size())  # batch size * number of dimension
-        # print(batch.discourse_effectiveness)
+        print(batch.discourse_effectiveness.size())
         break
     print("=" * 10)
     for batch in test_iterator:

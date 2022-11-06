@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import LSTM_util as U
-import model as preprocess
+import preprocessing as preprocess
 from sklearn.metrics import accuracy_score
 import numpy as np
 
@@ -11,8 +11,8 @@ torch.manual_seed(1)
 
 EMBEDDING_DIM = 6
 HIDDEN_DIM = 6
-
-model = U.LSTMTagger(EMBEDDING_DIM, HIDDEN_DIM, len(preprocess.TEXT.vocab), preprocess.batch.discourse_text[0].size(), preprocess.batch.discourse_effectiveness.size()[0])
+train_iterator, valid_iterator, test_iterator, TEXT, LABEL = preprocess.load_data(BATCH_SIZE=1)
+model = U.LSTMTagger(EMBEDDING_DIM, HIDDEN_DIM, len(TEXT.vocab), len(LABEL.vocab))
 loss_function = nn.NLLLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.1)
 def train(epoch,model,train_iterator,valid_iterator):
@@ -21,9 +21,9 @@ def train(epoch,model,train_iterator,valid_iterator):
             model.zero_grad()
             X = batch.discourse_text[0]
             Y = batch.discourse_effectiveness
+            print("X", X)
+            print("effectiveness",Y)
             tag_scores = model(X)
-            # print(len(batch.discourse_effectiveness))
-            # print(len(tag_scores))
             loss = loss_function(tag_scores, Y.to(torch.int64))
             loss.backward()
             optimizer.step()
@@ -48,4 +48,4 @@ def test(valid_iterator):
         accuracy = accuracy_score(test_data_y.T, y_test_predictions)
         print("Test_accuracy:", accuracy)
 
-train(100,model,preprocess.train_iterator,preprocess.valid_iterator)
+train(100,model,train_iterator,valid_iterator)
