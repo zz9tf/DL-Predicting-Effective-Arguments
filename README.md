@@ -52,7 +52,7 @@ python -m spacy download en_core_web_sm
 | LSTM Model | ?/? | ?/? |
 | GRU Model | ?/? | ?/? |
 
-## RNN model -- Zheng
+## RNN model
 
 ### Introduction
 In this section, to get the classification result, we used many-to-one RNN model the processing the whole sentence and produced the result.

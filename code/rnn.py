@@ -90,28 +90,16 @@ class Fine_tune_rnn():
     def train(self, epochs=1):
         losses = []
         for i in range(1, epochs + 1):
-            epoch_loss = []
             start_time = time.time()
-            for batch in self.train_iterator:
-                X = batch.discourse_text[0]
-                Y = batch.discourse_effectiveness.to(torch.int64)
-                Y_preds = self.model(X)
-                loss = self.loss_fn(Y_preds, Y)
-                epoch_loss.append(loss.item())
-
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
             print("Epoch {}/{}".format(i, epochs))
-            print("Train Loss : {:.3f}".format(sum(epoch_loss) / len(epoch_loss)))
-            losses.append(sum(epoch_loss) / len(epoch_loss))
-            self.evaluate_loss_acc()
+            self.loss_acc(dataset="Train")
+            self.loss_acc()
             end_time = time.time()
             print('Use time: {}\n'.format(secondsToStr(end_time - start_time)))
 
         return losses
 
-    def evaluate_loss_acc(self, dataset="Valid", visualize=False):
+    def loss_acc(self, dataset="Valid", visualize=False):
 
         if dataset == "Valid":
             iterator = self.valid_iterator
@@ -123,8 +111,7 @@ class Fine_tune_rnn():
         if visualize:
             # Keep track of correct guesses in a confusion matrix
             confusion = torch.zeros(len(self.target_classes.vocab), len(self.target_classes.vocab))
-
-        with torch.no_grad():
+        if dataset == "Train":
             Y_shuffled, Y_preds, losses = [], [], []
             for batch in iterator:
                 X = batch.discourse_text[0]
@@ -132,9 +119,13 @@ class Fine_tune_rnn():
                 Y_pred = self.model(X)
                 loss = self.loss_fn(Y_pred, Y)
                 losses.append(loss.item())
-
                 Y_shuffled.append(Y)
                 Y_preds.append(Y_pred.argmax(dim=-1))
+
+                self.optimizer.zero_grad()
+                loss.backward()
+                self.optimizer.step()
+
                 if visualize:
                     for y_id, y_pred_id in zip(Y, torch.argmax(Y_pred, axis=-1)):
                         confusion[y_id.item()][y_pred_id.item()] += 1
@@ -142,7 +133,29 @@ class Fine_tune_rnn():
             Y_shuffled = torch.cat(Y_shuffled)
             Y_preds = torch.cat(Y_preds)
             print("{} Loss : {:.3f}".format(dataset, torch.tensor(losses).mean()))
-            print("{} Acc : {:.3f}".format(dataset, accuracy_score(Y_shuffled.detach().numpy(), Y_preds.detach().numpy())))
+            print("{} Acc : {:.3f}".format(dataset,
+                                           accuracy_score(Y_shuffled.detach().numpy(), Y_preds.detach().numpy())))
+            return losses
+        else:
+            with torch.no_grad():
+                    Y_shuffled, Y_preds, losses = [], [], []
+                    for batch in iterator:
+                        X = batch.discourse_text[0]
+                        Y = batch.discourse_effectiveness.to(torch.int64)
+                        Y_pred = self.model(X)
+                        loss = self.loss_fn(Y_pred, Y)
+                        losses.append(loss.item())
+                        Y_shuffled.append(Y)
+                        Y_preds.append(Y_pred.argmax(dim=-1))
+                        if visualize:
+                            for y_id, y_pred_id in zip(Y, torch.argmax(Y_pred, axis=-1)):
+                                confusion[y_id.item()][y_pred_id.item()] += 1
+
+                    Y_shuffled = torch.cat(Y_shuffled)
+                    Y_preds = torch.cat(Y_preds)
+                    print("{} Loss : {:.3f}".format(dataset, torch.tensor(losses).mean()))
+                    print("{} Acc : {:.3f}".format(dataset,
+                                                   accuracy_score(Y_shuffled.detach().numpy(), Y_preds.detach().numpy())))
 
         if visualize:
             # Normalize by dividing every row by its sum
@@ -170,6 +183,6 @@ class Fine_tune_rnn():
 if __name__ == "__main__":
     fine_rnn = Fine_tune_rnn()
     fine_rnn.train(30)
-    fine_rnn.evaluate_loss_acc(visualize=True)
+    fine_rnn.loss_acc(visualize=True)
 
 
