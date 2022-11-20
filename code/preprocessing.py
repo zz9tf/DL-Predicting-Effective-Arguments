@@ -1,7 +1,7 @@
+# coding=utf-8
 import os
 import torch
 from torchtext.legacy import data
-
 
 def load_data(BATCH_SIZE=10,
               split_ratio=0.7,
@@ -13,6 +13,11 @@ def load_data(BATCH_SIZE=10,
     :param BATCH_SIZE: batch size (default: 10)
     :param split_ratio: Ratio between training and validation datasets (default: 0.7)
     :param vectors: pre-trained word embeddings we want to use (default: "glove.6B.100d")
+                    vectors – one of or a list containing instantiations of the GloVe, CharNGram, or Vectors classes.
+                    Alternatively, one of or a list of available pretrained vectors: charngram.100d fasttext.en.300d
+                    fasttext.simple.300d glove.42B.300d glove.840B.300d glove.twitter.27B.25d glove.twitter.27B.50d
+                    glove.twitter.27B.100d glove.twitter.27B.200d glove.6B.50d glove.6B.100d glove.6B.200d glove.6B.300d
+                    initialize glove embeddings (We can also experiment with different kinds of word embeddings in the future)
     :param data_information: True if you want to view information of training datasets (default: False)
     :return: train_iterator, valid_iterator, test_iterator, TEXT, LABEL
     """
@@ -75,16 +80,16 @@ def load_data(BATCH_SIZE=10,
 if __name__ == "__main__":
     train_iterator, valid_iterator, test_iterator, TEXT, LABEL = load_data(BATCH_SIZE=30)
     for batch in train_iterator:
-        # print(batch.discourse_text)
-        print(batch.discourse_text[0].size())  # batch size * number of dimension
+        print(batch.discourse_text[0].size())  # batch size * sentence length
         print(batch.discourse_text[1].size())  # batch size
+        print(batch.discourse_text)
         # print(batch.discourse_effectiveness)
         break
     print("=" * 10)
     for batch in test_iterator:
-        # print(batch.discourse_text)
-        print(batch.discourse_text[0].size())  # batch size * number of dimension
+        print(batch.discourse_text[0].size())  # batch size * sentence length
         print(batch.discourse_text[1].size())  # batch size
+        # print(batch.discourse_text)
         # print(batch.discourse_effectiveness)
         break
 

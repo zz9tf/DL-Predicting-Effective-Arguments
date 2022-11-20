@@ -11,6 +11,8 @@ conda create -n dl_project python=3.9
 conda activate dl_project
 conda install pytorch torchvision torchaudio -c pytorch
 conda install -c pytorch torchtext
+conda install matplotlib
+pip install pyyaml
 ```
 
 Sometimes, there might be some errors when using torchtext such as
@@ -39,17 +41,21 @@ python -m spacy download en_core_web_sm
 
 - Inside the code folder
 
-| File | Description |
-| -------------| ------------------------------ |
-| `preprocess.py`      | The file to preprocess dataset |
-| `rnn.py`   |  The file includes a RNN model and a fine tune version which trains/evaluates this RNN model |
+| File            | Description                                                                                             |
+|-----------------|---------------------------------------------------------------------------------------------------------|
+| `preprocess.py` | Splits and wraps datasets into data iterators using Torchtext                                           |
+| `rnn.py`        | Includes a RNN model and a fine tune version which trains/evaluates this RNN model                      |
+ | `model.py`      | Defines the RNN, LSTM, and GRU                                                                          |                         
+| `config.yml`    | Sets the hyperparameter for loading data, models, and training.                                         |
+| `train.py`      | Defines functions that train the model, plot loss/accuracy for train/valid datasets, and make inference |
+| `run.py`        | Trains the model, plot loss and accuracy                                                                |
 
 ### Model's accuracy
-| Model | Accuracy/Loss on train | Average Accuracy/Loss on test |
-| ----- | -----------------------| ----------------------------- |
-| RNN Model | 64.2%/0.834 | 62.3%/0.857 |
-| LSTM Model | ?/? | ?/? |
-| GRU Model | ?/? | ?/? |
+| Model | Accuracy/Loss on train | Average Accuracy/Loss on validation |
+| ----- |------------------------|-------------------------------------|
+| RNN Model | 68.78%/0.817           | 64.8%/0.873                         |
+| LSTM Model | ?/?                    | ?/?                                 |
+| GRU Model | ?/?                    | ?/?                                 |
 
 ## RNN model
 
