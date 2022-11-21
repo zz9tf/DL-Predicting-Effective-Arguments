@@ -20,10 +20,11 @@ class RNN(nn.Module):
                           dropout=dropout,
                           bidirectional=bidirectional)
         if bidirectional:
-            self.fc1 = nn.Linear(hidden_size * 2, 32)
+            self.fc1 = nn.Linear(hidden_size * 2, 64)
         else:
-            self.fc1 = nn.Linear(hidden_size, 32)
-        self.fc2 = nn.Linear(32, num_classes)
+            self.fc1 = nn.Linear(hidden_size, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, num_classes)
 
     def forward(self, text, text_len):
         # dim(text) = batch_size * sentence_length
@@ -50,7 +51,10 @@ class RNN(nn.Module):
             y = torch.mean(padded_output, dim=0)
             # dim(y) = batch_size * D*(H out)
         y = F.relu(self.fc1(y))
-        y = torch.sigmoid(self.fc2(y))
+        y = F.dropout(y, p=0.2)
+        y = F.relu(self.fc2(y))
+        y = F.dropout(y, p=0.2)
+        y = torch.sigmoid(self.fc3(y))
         return y
 
 
@@ -71,10 +75,11 @@ class LSTM(nn.Module):
                             dropout=dropout,
                             bidirectional=bidirectional)
         if bidirectional:
-            self.fc1 = nn.Linear(hidden_size * 2, 32)
+            self.fc1 = nn.Linear(hidden_size * 2, 64)
         else:
-            self.fc1 = nn.Linear(hidden_size, 32)
-        self.fc2 = nn.Linear(32, num_classes)
+            self.fc1 = nn.Linear(hidden_size, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, num_classes)
 
     def forward(self, text, text_len):
         # dim(text) = batch_size * sentence_length
@@ -101,7 +106,10 @@ class LSTM(nn.Module):
             y = torch.mean(padded_output, dim=0)
             # dim(y) = batch_size * D*(H out)
         y = F.relu(self.fc1(y))
-        y = torch.sigmoid(self.fc2(y))
+        y = F.dropout(y, p=0.2)
+        y = F.relu(self.fc2(y))
+        y = F.dropout(y, p=0.2)
+        y = torch.sigmoid(self.fc3(y))
         return y
 
 
@@ -122,10 +130,11 @@ class GRU(nn.Module):
                            dropout=dropout,
                            bidirectional=bidirectional)
         if bidirectional:
-            self.fc1 = nn.Linear(hidden_size * 2, 32)
+            self.fc1 = nn.Linear(hidden_size * 2, 64)
         else:
-            self.fc1 = nn.Linear(hidden_size, 32)
-        self.fc2 = nn.Linear(32, num_classes)
+            self.fc1 = nn.Linear(hidden_size, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, num_classes)
 
     def forward(self, text, text_len):
         # dim(text) = batch_size * sentence_length
@@ -152,5 +161,8 @@ class GRU(nn.Module):
             y = torch.mean(padded_output, dim=0)
             # dim(y) = batch_size * D*(H out)
         y = F.relu(self.fc1(y))
-        y = torch.sigmoid(self.fc2(y))
+        y = F.dropout(y, p=0.2)
+        y = F.relu(self.fc2(y))
+        y = F.dropout(y, p=0.2)
+        y = torch.sigmoid(self.fc3(y))
         return y

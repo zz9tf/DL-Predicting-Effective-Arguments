@@ -41,21 +41,24 @@ python -m spacy download en_core_web_sm
 
 - Inside the code folder
 
-| File            | Description                                                                                             |
-|-----------------|---------------------------------------------------------------------------------------------------------|
-| `preprocess.py` | Splits and wraps datasets into data iterators using Torchtext                                           |
-| `rnn.py`        | Includes a RNN model and a fine tune version which trains/evaluates this RNN model                      |
- | `model.py`      | Defines the RNN, LSTM, and GRU                                                                          |                         
-| `config.yml`    | Sets the hyperparameter for loading data, models, and training.                                         |
-| `train.py`      | Defines functions that train the model, plot loss/accuracy for train/valid datasets, and make inference |
-| `run.py`        | Trains the model, plot loss and accuracy                                                                |
+| File                                   | Description                                                                                             |
+|----------------------------------------|---------------------------------------------------------------------------------------------------------|
+| [preprocess.py](code/preprocessing.py) | Splits and wraps datasets into data iterators using Torchtext                                           |
+| [rnn.py](code/rnn.py)                  | Includes a RNN model and a fine tune version which trains/evaluates this RNN model                      |
+ | [model.py](code/model.py)              | Defines the RNN, LSTM, and GRU                                                                          |                         
+| [config.yml](code/config.yml)          | Sets the hyperparameter for loading data, initializing models, and training.                            |
+| [train.py](code/train.py)              | Defines functions that train the model, plot loss/accuracy for train/valid datasets, and make inference |
+| [run.py](code/run.py)                  | Trains the model, plot loss and accuracy                                                                |
 
 ### Model's accuracy
-| Model | Accuracy/Loss on train | Average Accuracy/Loss on validation |
-| ----- |------------------------|-------------------------------------|
-| RNN Model | 68.78%/0.817           | 64.8%/0.873                         |
-| LSTM Model | ?/?                    | ?/?                                 |
-| GRU Model | ?/?                    | ?/?                                 |
+| Model | Bidirectional | Last Hidden | Accuracy/Loss on train | Accuracy/Loss on validation | 
+|-------|---------------|-------------|------------------------|-----------------------------|
+| RNN   | True          | True        | 68.78% / 0.817         | 64.8% / 0.873               |
+| RNN   | True          | False       | ?/?                    | ?/?                         |
+| LSTM  | True          | True        | ?/?                    | ?/?                         |
+| LSTM  | True          | False       | ?/?                    | ?/?                         |
+| GRU   | True          | True        | ?/?                    | ?/?                         |
+| GRU   | True          | False       | ?/?                    | ?/?                         |
 
 ## RNN model
 
@@ -68,12 +71,12 @@ In this section, to get the classification result, we used many-to-one RNN model
 
 - structure
 
-| Model layers | input | output | notes |
-| ------------ | ------| ------ | ----- |
-| Embedding layer | (batch_size, sequence_length) | (batch_size, sequence_length, embedding_size) | Encode words as word embedding |
-| RNN layer | (batch_size, sequence_length, embedding_size) | (batch_size, hidden_size) | Count final hidden state as the RNN output |
-| Fully connection layer | (batch_size, hidden_size) | (batch_size, output_size) | Combine rnn result and get output shape match the output size |
-| softmax layer | (batch_size, output_size) | (batch_size, output_size) | None |
+| Model layers           | input                         | output                                                                                           | notes                                                                                                         |
+|------------------------|-------------------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| Embedding layer        | (batch_size, sequence_length) | (batch_size, sequence_length, embedding_size)                                                    | Encode words as word embedding by using pretrained text vectors                                               |
+| RNN layer              | PACKEDSEQUENCE                | (sequence_length, batch_size, (D * hidden_size)) and ((D * num_layers), batch_size, hidden_size) | Count final forward and backward hidden states as the RNN output, or the average pooling of all hidden states |
+| Fully connection layer | (batch_size, D * hidden_size) | (batch_size, 3)                                                                                  | Combine rnn result and get output shape match the output size                                                 |
+| softmax layer          | (batch_size, 3)               | (batch_size, 3)                                                                                  | Softmax output for our text classification problem                                                            |
 
 - Model pramater
 

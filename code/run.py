@@ -61,8 +61,8 @@ else:
                   last_hidden=settings[model_name]["last_hidden"])
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=settings["training"]["learning_rate"])
-scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=30)
+optimizer = optim.Adam(model.parameters(), lr=settings["training"]["learning_rate"], weight_decay=float(settings["training"]["weight_decay"]))
+scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=10)
 train_loss, train_accuracy, valid_loss, valid_accuracy = train.model_train(net=model,
                                                                            train_iterator=train_iterator,
                                                                            valid_iterator=valid_iterator,

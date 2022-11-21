@@ -6,21 +6,21 @@ general:
   model: GRU # (RNN, LSTM, or GRU)
 
 RNN:
-  hidden_size: 55
+  hidden_size: 64
   number_of_layers: 2
   bidirectional: True
   dropout: 0.2
   last_hidden: True
 
 LSTM:
-  hidden_size: 55
+  hidden_size: 64
   number_of_layers: 2
   bidirectional: True
   dropout: 0.2
   last_hidden: True
 
 GRU:
-  hidden_size: 55
+  hidden_size: 64
   number_of_layers: 2
   bidirectional: True
   dropout: 0.2
@@ -29,3 +29,4 @@ GRU:
 training:
   EPOCH_NUM: 100
   learning_rate: 0.001
+  weight_decay: 1e-5
