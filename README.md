@@ -41,35 +41,26 @@ python -m spacy download en_core_web_sm
 
 - Inside the code folder
 
-| File                                   | Description                                                                                             |
-|----------------------------------------|---------------------------------------------------------------------------------------------------------|
-| [preprocess.py](code/preprocessing.py) | Splits and wraps datasets into data iterators using Torchtext                                           |
-| [rnn.py](code/rnn.py)                  | Includes a RNN model and a fine tune version which trains/evaluates this RNN model                      |
- | [model.py](code/model.py)              | Defines the RNN, LSTM, and GRU                                                                          |                         
-| [config.yml](code/config.yml)          | Sets the hyperparameter for loading data, initializing models, and training.                            |
-| [train.py](code/train.py)              | Defines functions that train the model, plot loss/accuracy for train/valid datasets, and make inference |
-| [run.py](code/run.py)                  | Trains the model, plot loss and accuracy                                                                |
+| File                                      | Description                                                                                             |
+|-------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| [preprocessing.py](code/preprocessing.py) | Splits and wraps datasets into data iterators using Torchtext                                           |
+| [rnn.py](code/rnn.py)                     | Includes a RNN model and a fine tune version which trains/evaluates this RNN model                      |
+ | [models.py](code/models.py)               | Defines the RNN, LSTM, and GRU                                                                          |                         
+| [config.yml](code/config.yml)             | Sets the hyperparameter for loading data, initializing models, and training.                            |
+| [train.py](code/train.py)                 | Defines functions that train the model, plot loss/accuracy for train/valid datasets, and make inference |
+| [run.py](code/run.py)                     | Trains the model, plot loss and accuracy                                                                |
 
 ### Model's accuracy
 | Model | Bidirectional | Last Hidden | Accuracy/Loss on train | Accuracy/Loss on validation | 
 |-------|---------------|-------------|------------------------|-----------------------------|
 | RNN   | True          | True        | 68.78% / 0.817         | 64.8% / 0.873               |
 | RNN   | True          | False       | ?/?                    | ?/?                         |
-| LSTM  | True          | True        | ?/?                    | ?/?                         |
+| LSTM  | True          | True        | 73.44% / 0.816         | 63.49% / 0.912              |
 | LSTM  | True          | False       | ?/?                    | ?/?                         |
-| GRU   | True          | True        | ?/?                    | ?/?                         |
+| GRU   | True          | True        | 76.10% / 0.79          | 63.40% / 0.914              |
 | GRU   | True          | False       | ?/?                    | ?/?                         |
 
-## RNN model
-
-### Introduction
-In this section, to get the classification result, we used many-to-one RNN model the processing the whole sentence and produced the result.
-
-![image](https://user-images.githubusercontent.com/77183284/198885542-63c77159-b458-49fd-9b5f-6036082efebc.png)
-
 ### Model structure
-
-- structure
 
 | Model layers           | input                         | output                                                                                           | notes                                                                                                         |
 |------------------------|-------------------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -77,6 +68,13 @@ In this section, to get the classification result, we used many-to-one RNN model
 | RNN layer              | PACKEDSEQUENCE                | (sequence_length, batch_size, (D * hidden_size)) and ((D * num_layers), batch_size, hidden_size) | Count final forward and backward hidden states as the RNN output, or the average pooling of all hidden states |
 | Fully connection layer | (batch_size, D * hidden_size) | (batch_size, 3)                                                                                  | Combine rnn result and get output shape match the output size                                                 |
 | softmax layer          | (batch_size, 3)               | (batch_size, 3)                                                                                  | Softmax output for our text classification problem                                                            |
+
+## RNN model
+
+### Introduction
+In this section, to get the classification result, we used many-to-one RNN model the processing the whole sentence and produced the result.
+
+![image](https://user-images.githubusercontent.com/77183284/198885542-63c77159-b458-49fd-9b5f-6036082efebc.png)
 
 - Model pramater
 

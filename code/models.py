@@ -133,7 +133,9 @@ class GRU(nn.Module):
             self.fc1 = nn.Linear(hidden_size * 2, 64)
         else:
             self.fc1 = nn.Linear(hidden_size, 64)
+        self.bn1 = nn.BatchNorm1d(64)
         self.fc2 = nn.Linear(64, 32)
+        self.bn2 = nn.BatchNorm1d(32)
         self.fc3 = nn.Linear(32, num_classes)
 
     def forward(self, text, text_len):
@@ -160,9 +162,9 @@ class GRU(nn.Module):
             # Avg pooling on padded_output's L's dimension
             y = torch.mean(padded_output, dim=0)
             # dim(y) = batch_size * D*(H out)
-        y = F.relu(self.fc1(y))
+        y = F.relu(self.bn1(self.fc1(y)))
         y = F.dropout(y, p=0.2)
-        y = F.relu(self.fc2(y))
+        y = F.relu(self.bn2(self.fc2(y)))
         y = F.dropout(y, p=0.2)
         y = torch.sigmoid(self.fc3(y))
         return y

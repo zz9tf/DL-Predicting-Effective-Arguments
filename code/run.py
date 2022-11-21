@@ -7,6 +7,7 @@ import models as U
 import preprocessing as preprocess
 import train
 
+# DO NOT Modify
 EMBEDDING_DIM = 100
 NUM_CLASSES = 3
 
