@@ -60,6 +60,17 @@ python -m spacy download en_core_web_sm
 | GRU   | True          | True        | 76.10% / 0.79          | 63.40% / 0.914              |
 | GRU   | True          | False       | ?/?                    | ?/?                         |
 
+## RNN model
+
+### Introduction
+In this section, to get the classification result, we used many-to-one RNN model the processing the whole sentence and produced the result.
+
+![image](https://user-images.githubusercontent.com/77183284/198885542-63c77159-b458-49fd-9b5f-6036082efebc.png)
+
+### Model pramater
+
+<img width="465" alt="image" src="https://user-images.githubusercontent.com/77183284/200183904-bda81a48-41c0-49ff-9185-fe0d3752819c.png">
+
 ### Model structure
 
 | Model layers           | input                         | output                                                                                           | notes                                                                                                         |
@@ -68,18 +79,6 @@ python -m spacy download en_core_web_sm
 | RNN layer              | PACKEDSEQUENCE                | (sequence_length, batch_size, (D * hidden_size)) and ((D * num_layers), batch_size, hidden_size) | Count final forward and backward hidden states as the RNN output, or the average pooling of all hidden states |
 | Fully connection layer | (batch_size, D * hidden_size) | (batch_size, 3)                                                                                  | Combine rnn result and get output shape match the output size                                                 |
 | softmax layer          | (batch_size, 3)               | (batch_size, 3)                                                                                  | Softmax output for our text classification problem                                                            |
-
-## RNN model
-
-### Introduction
-In this section, to get the classification result, we used many-to-one RNN model the processing the whole sentence and produced the result.
-
-![image](https://user-images.githubusercontent.com/77183284/198885542-63c77159-b458-49fd-9b5f-6036082efebc.png)
-
-- Model pramater
-
-<img width="465" alt="image" src="https://user-images.githubusercontent.com/77183284/200183904-bda81a48-41c0-49ff-9185-fe0d3752819c.png">
-
 
 
 
