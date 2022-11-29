@@ -1,0 +1,32 @@
+general:
+  me: config.yml
+  BATCH_SIZE: 30
+  split_ratio: 0.7
+  data_information: False
+  model: LSTM # (RNN, LSTM, or GRU)
+
+RNN:
+  hidden_size: 64
+  number_of_layers: 2
+  bidirectional: True
+  dropout: 0.2
+  last_hidden: True
+
+LSTM:
+  hidden_size: 64
+  number_of_layers: 2
+  bidirectional: True
+  dropout: 0.2
+  last_hidden: False
+
+GRU:
+  hidden_size: 64
+  number_of_layers: 2
+  bidirectional: True
+  dropout: 0.2
+  last_hidden: True
+
+training:
+  EPOCH_NUM: 100
+  learning_rate: 0.001
+  weight_decay: 1e-5
