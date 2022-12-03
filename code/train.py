@@ -100,8 +100,8 @@ def plot_loss(train_loss, valid_loss, model_name):
     legend = plt.legend(loc='lower right')
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
-    plt.show()
     plt.savefig(f'../output/{model_name}_Training_Validation_Loss.png', bbox_inches='tight', dpi=2000)
+    plt.show()
 
 
 def plot_accuracy(train_accuracy, valid_accuracy, model_name):
@@ -114,5 +114,6 @@ def plot_accuracy(train_accuracy, valid_accuracy, model_name):
     legend = plt.legend(loc='lower right')
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
-    plt.show()
     plt.savefig(f'../output/{model_name}_Training_Validation_Accuracy.png', bbox_inches='tight', dpi=2000)
+    plt.show()
+    
