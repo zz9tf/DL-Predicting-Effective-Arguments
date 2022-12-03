@@ -13,20 +13,20 @@ RNN:
   last_hidden: True
 
 LSTM:
-  hidden_size: 64
+  hidden_size: 16
   number_of_layers: 2
-  bidirectional: True
+  bidirectional: False
   dropout: 0.2
   last_hidden: False
 
 GRU:
-  hidden_size: 64
+  hidden_size: 16
   number_of_layers: 2
   bidirectional: True
   dropout: 0.2
   last_hidden: True
 
 training:
-  EPOCH_NUM: 100
+  EPOCH_NUM: 50
   learning_rate: 0.001
   weight_decay: 1e-5

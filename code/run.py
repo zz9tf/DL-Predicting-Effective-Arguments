@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import yaml
+# from pytorch_forecasting.optim import Ranger
 
 import models as U
 import preprocessing as preprocess
@@ -63,6 +64,7 @@ else:
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=settings["training"]["learning_rate"], weight_decay=float(settings["training"]["weight_decay"]))
+# optimizer = Ranger(model.parameters(), lr=settings["training"]["learning_rate"], weight_decay=float(settings["training"]["weight_decay"]))
 scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=10)
 train_loss, train_accuracy, valid_loss, valid_accuracy = train.model_train(net=model,
                                                                            train_iterator=train_iterator,
