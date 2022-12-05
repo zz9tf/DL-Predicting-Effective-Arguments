@@ -124,7 +124,7 @@ class GRU(nn.Module):
 
         # self.embedding = nn.Embedding(vocab_size, embedding_size)
         self.embedding = nn.Embedding.from_pretrained(TEXT.vocab.vectors)
-        self.lstm = nn.GRU(input_size=embedding_size,
+        self.gru = nn.GRU(input_size=embedding_size,
                            hidden_size=hidden_size,
                            num_layers=layers,
                            dropout=dropout,
@@ -146,7 +146,7 @@ class GRU(nn.Module):
         # packed sequence
         packed_sequence = nn.utils.rnn.pack_padded_sequence(x, text_len.cpu(), batch_first=True)
 
-        output, hidden = self.lstm(packed_sequence)
+        output, hidden = self.gru(packed_sequence)
         # dim(hn) = (D*num_layers) * batch_size * H out
         padded_output, _ = torch.nn.utils.rnn.pad_packed_sequence(output)
         # dim(padded_output) = L * batch_size * (D*H out)

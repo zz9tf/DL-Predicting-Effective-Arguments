@@ -68,22 +68,20 @@ def load_data(BATCH_SIZE=10,
 
     return train_iterator, valid_iterator, test_iterator, TEXT, LABEL
 
-
 if __name__ == "__main__":
-    train_iterator, valid_iterator, test_iterator, TEXT, LABEL = load_data(BATCH_SIZE=1)
+    train_iterator, valid_iterator, test_iterator, TEXT, LABEL = load_data(BATCH_SIZE=30)
     for batch in train_iterator:
-        print(batch.discourse_text.size())  # batch size * number of dimension
+        print(batch.discourse_text[0].size())  # batch size * sentence length
+        print(batch.discourse_text[1].size())  # batch size
+        print(batch.discourse_text)
         # print(batch.discourse_effectiveness)
         break
     print("=" * 10)
     for batch in test_iterator:
+        print(batch.discourse_text[0].size())  # batch size * sentence length
+        print(batch.discourse_text[1].size())  # batch size
         # print(batch.discourse_text)
-        print(batch.discourse_text.size())  # batch size * number of dimension
         # print(batch.discourse_effectiveness)
         break
 
-    for batch in valid_iterator:
-        # print(batch.discourse_text)
-        print(batch.discourse_text.size())  # batch size * number of dimension
-        # print(batch.discourse_effectiveness)
-        break
+    print(TEXT.vocab.vectors.size())
