@@ -17,6 +17,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 settings_path = 'config.yml'
 settings = yaml.safe_load(open(settings_path, "r"))
 
+model_trained = dict()
+
 model_name = settings["general"]["model"].upper()  # ("RNN", "LSTM", "GRU")
 
 train_iterator, valid_iterator, test_iterator, TEXT, LABEL = preprocess.load_data(
@@ -66,7 +68,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=settings["training"]["learning_rate"], weight_decay=float(settings["training"]["weight_decay"]))
 # optimizer = Ranger(model.parameters(), lr=settings["training"]["learning_rate"], weight_decay=float(settings["training"]["weight_decay"]))
 scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=10)
-train_loss, train_accuracy, valid_loss, valid_accuracy = train.model_train(net=model,
+train_loss, train_accuracy, valid_loss, valid_accuracy, net = train.model_train(net=model,
                                                                            train_iterator=train_iterator,
                                                                            valid_iterator=valid_iterator,
                                                                            epoch_num=settings["training"]["EPOCH_NUM"],
@@ -74,6 +76,7 @@ train_loss, train_accuracy, valid_loss, valid_accuracy = train.model_train(net=m
                                                                            optimizer=optimizer,
                                                                            scheduler=scheduler,
                                                                            device=device)
+model_trained[model_name] = net
 
 train.plot_loss(train_loss=train_loss, valid_loss=valid_loss, model_name=model_name)
 train.plot_accuracy(train_accuracy=train_accuracy, valid_accuracy=valid_accuracy, model_name=model_name)
