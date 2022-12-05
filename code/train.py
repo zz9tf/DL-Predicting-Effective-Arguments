@@ -92,7 +92,7 @@ def model_train(net, train_iterator, valid_iterator, epoch_num, criterion, optim
                 print(f"valid loss after epoch {epoch + 1} is {valid_l}")
                 print(f"valid accuracy after epoch {epoch + 1} is {valid_acc}")
 
-    return train_loss, train_accuracy, valid_loss, valid_accuracy
+    return train_loss, train_accuracy, valid_loss, valid_accuracy, net
 
 
 def calculate_accuracy(y_hat, y, device):
