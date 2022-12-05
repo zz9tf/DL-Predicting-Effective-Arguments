@@ -3,7 +3,7 @@ general:
   BATCH_SIZE: 30
   split_ratio: 0.7
   data_information: False
-  model: RNN # (RNN, LSTM, or GRU)
+  model: BERT # (RNN, LSTM, GRU, BERT)
 
 RNN:
   hidden_size: 16
@@ -27,6 +27,6 @@ GRU:
   last_hidden: True
 
 training:
-  EPOCH_NUM: 50
+  EPOCH_NUM: 2
   learning_rate: 0.001
   weight_decay: 1e-5

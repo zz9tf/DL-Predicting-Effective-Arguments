@@ -13,6 +13,7 @@ conda install pytorch torchvision torchaudio -c pytorch
 conda install -c pytorch torchtext
 conda install matplotlib
 pip install pyyaml
+pip install transformers
 ```
 
 Sometimes, there might be some errors when using torchtext such as

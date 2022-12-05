@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 
 
-def model_train(net, train_iterator, valid_iterator, epoch_num, criterion, optimizer, scheduler, device):
+def model_train(net, train_iterator, valid_iterator, epoch_num, criterion, optimizer, scheduler, device, is_bert=False):
     train_loss = []
     train_accuracy = []
     valid_loss = []
@@ -18,24 +18,39 @@ def model_train(net, train_iterator, valid_iterator, epoch_num, criterion, optim
         valid_acc = 0
         valid_l = 0
         for i, batch in enumerate(train_iterator):
-            text, text_len = batch.discourse_text
-            text = text.to(device)
-            text_len = text_len.to(device)
+            if is_bert:
+                text = batch.discourse_text  # 30 * 100
+                text = text.to(device)
+            else:
+                text, text_len = batch.discourse_text
+                text = text.to(device)
+                text_len = text_len.to(device)
             y = batch.discourse_effectiveness.to(device)
             optimizer.zero_grad()
-            y_hat = net(text, text_len)
+            if is_bert:
+                net = net.to(device)
+                y = y.to(torch.int64)
+                l, y_hat = net(text, y)
+            else:
+                y_hat = net(text, text_len)
+                l = criterion(y_hat, y.to(dtype=torch.long))
             train_acc += calculate_accuracy(y_hat, y, device)
-            l = criterion(y_hat, y.to(dtype=torch.long))
             l.backward()
             optimizer.step()
             scheduler.step(epoch + i / len(train_iterator))
             train_l += l
         train_acc = train_acc / len(train_iterator)
-        train_acc = train_acc.cpu().detach().numpy()
-        train_accuracy.append(train_acc)
+        if is_bert:
+            train_accuracy.append(train_acc)
+        else:
+            train_acc = train_acc.cpu().detach().numpy()
+            train_accuracy.append(train_acc)
         train_l = train_l / len(train_iterator)
-        train_l = train_l.cpu().detach().numpy()
-        train_loss.append(train_l)
+        if is_bert:
+            train_loss.append(train_l)
+        else:
+            train_l = train_l.cpu().detach().numpy()
+            train_loss.append(train_l)
         if epoch == 0 or (epoch + 1) % 2 == 0:
             print(f"train loss after epoch {epoch + 1} is {train_l}")
             print(f"train accuracy after epoch {epoch + 1} is {train_acc}")
@@ -43,20 +58,35 @@ def model_train(net, train_iterator, valid_iterator, epoch_num, criterion, optim
         net.eval()
         with torch.no_grad():
             for batch in valid_iterator:
-                text, text_len = batch.discourse_text
-                text = text.to(device)
-                text_len = text_len.to(device)
+                if is_bert:
+                    text = batch.discourse_text  # 30 * 100
+                    text = text.to(device)
+                else:
+                    text, text_len = batch.discourse_text
+                    text = text.to(device)
+                    text_len = text_len.to(device)
                 y = batch.discourse_effectiveness.to(device)
-                y_hat = net(text, text_len)
-                l = criterion(y_hat, y.to(dtype=torch.long))
+                if is_bert:
+                    net = net.to(device)
+                    y = y.to(torch.int64)
+                    l, y_hat = net(text, y)
+                else:
+                    y_hat = net(text, text_len)
+                    l = criterion(y_hat, y.to(dtype=torch.long))
                 valid_acc += calculate_accuracy(y_hat, y, device)
                 valid_l += l
             valid_acc = valid_acc / len(valid_iterator)
-            valid_acc = valid_acc.cpu().detach().numpy()
-            valid_accuracy.append(valid_acc)
+            if is_bert:
+                valid_accuracy.append(valid_acc)
+            else:
+                valid_acc = valid_acc.cpu().detach().numpy()
+                valid_accuracy.append(valid_acc)
             valid_l = valid_l / len(valid_iterator)
-            valid_l = valid_l.cpu().detach().numpy()
-            valid_loss.append(valid_l)
+            if is_bert:
+                valid_loss.append(valid_l)
+            else:
+                valid_l = valid_l.cpu().detach().numpy()
+                valid_loss.append(valid_l)
 
             if epoch == 0 or (epoch + 1) % 2 == 0:
                 print(f"valid loss after epoch {epoch + 1} is {valid_l}")
@@ -116,4 +146,3 @@ def plot_accuracy(train_accuracy, valid_accuracy, model_name):
     ax.set_xlim(left=0)
     plt.savefig(f'../output/{model_name}_Training_Validation_Accuracy.png', bbox_inches='tight', dpi=2000)
     plt.show()
-    

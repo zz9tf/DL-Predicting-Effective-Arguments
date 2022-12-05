@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from transformers import BertForSequenceClassification
 
 
 class RNN(nn.Module):
@@ -125,10 +126,10 @@ class GRU(nn.Module):
         # self.embedding = nn.Embedding(vocab_size, embedding_size)
         self.embedding = nn.Embedding.from_pretrained(TEXT.vocab.vectors)
         self.gru = nn.GRU(input_size=embedding_size,
-                           hidden_size=hidden_size,
-                           num_layers=layers,
-                           dropout=dropout,
-                           bidirectional=bidirectional)
+                          hidden_size=hidden_size,
+                          num_layers=layers,
+                          dropout=dropout,
+                          bidirectional=bidirectional)
         if bidirectional:
             self.fc1 = nn.Linear(hidden_size * 2, 64)
         else:
@@ -168,3 +169,17 @@ class GRU(nn.Module):
         y = F.dropout(y, p=0.2)
         y = torch.sigmoid(self.fc3(y))
         return y
+
+
+class BERT(nn.Module):
+
+    def __init__(self, device):
+        super(BERT, self).__init__()
+        self.device = device
+        options_name = "bert-base-uncased"
+        self.encoder = BertForSequenceClassification.from_pretrained(options_name, num_labels=3)
+
+    def forward(self, text, label):
+        loss, text_fea = self.encoder(text, labels=label)[:2]
+
+        return loss, text_fea
