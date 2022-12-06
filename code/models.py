@@ -176,7 +176,7 @@ class BERT(nn.Module):
     def __init__(self, device):
         super(BERT, self).__init__()
         self.device = device
-        options_name = "bert-large-uncased" #"bert-base-uncased"
+        options_name = "bert-base-uncased" #"bert-base-uncased"
 
         self.encoder = BertForSequenceClassification.from_pretrained(options_name, num_labels=3)
 
