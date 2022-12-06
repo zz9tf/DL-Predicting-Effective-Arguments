@@ -54,12 +54,19 @@ python -m spacy download en_core_web_sm
 ### Model's accuracy
 | Model | Bidirectional | Last Hidden | Loss on train | Loss on validation | 
 |-------|---------------|-------------|---------------|-----------------------------|
-| RNN   | True          | True        | 0.917         | 0.929              |
-| RNN   | True          | False       | 0.890         | 0.897              |
-| LSTM  | True          | True        | 0.854         | 0.909              |
-| LSTM  | True          | False       | 0.842         | 0.880              |
-| GRU   | True          | True        | 0.832         | 0.880              |
-| GRU   | True          | False       | 0.815         | 0.884              |
+| RNN   | True          | True        | ？？？         | ？？？              |
+| RNN   | True          | False       | ？？？         | ？？？              |
+| RNN   | False         | True        | ？？？         | ？？？              |
+| RNN   | False         | False       | ？？？         | ？？？              |
+| LSTM  | True          | True        | ？？？         | ？？？              |
+| LSTM  | True          | False       | ？？？         | ？？？              |
+| LSTM  | False         | True        | ？？？         | ？？？              |
+| LSTM  | False         | False       | ？？？         | ？？？              |
+| GRU   | True          | True        | ？？？         | ？？？              |
+| GRU   | True          | False       | ？？？         | ？？？              |
+| GRU   | False         | True        | ？？？         | ？？？              |
+| GRU   | False         | False       | ？？？         | ？？？              |
+| Bert  | NA            | NA          | ？？？         | ？？？              |
 
 ### Model structure
 
