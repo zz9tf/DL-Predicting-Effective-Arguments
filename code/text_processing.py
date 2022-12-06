@@ -47,13 +47,10 @@ df = pd.read_csv("../data/train.csv")
 wl = WordNetLemmatizer()
 for id in range(len(df)):
     sent = df["discourse_text"][id]
-    print(sent)
     sent = preprocess(sent)
     sent = stopword(sent)
     sent = lemmatizer(sent, wl)
     df["discourse_text"][id] = sent
-    print(sent)
-    input()
     id += 1
     stars = '*'*int(50*id/len(df))
     print("Processing data points: |{:50s}| {:.2f}% [{}|{}]".format(
