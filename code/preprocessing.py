@@ -20,7 +20,7 @@ def load_data(BATCH_SIZE=10,
     :param data_information: True if you want to view information of training datasets (default: False)
     :return: train_iterator, valid_iterator, test_iterator, TEXT, LABEL
     """
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+    tokenizer = BertTokenizer.from_pretrained('bert-large-uncased', do_lower_case=True) # "bert-base-uncased"
     current_path = os.getcwd()
     data_dir = '/../data/'
     train_data_path = os.path.join(current_path + data_dir, "train.csv")

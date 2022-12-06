@@ -73,7 +73,7 @@ else:
     model = U.BERT(device=device)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=settings["training"]["learning_rate"],
+optimizer = optim.Adam(model.parameters(), lr=float(settings[model_name]["learning_rate"]),
                        weight_decay=float(settings["training"]["weight_decay"]))
 # optimizer = Ranger(model.parameters(), lr=settings["training"]["learning_rate"], weight_decay=float(settings["training"]["weight_decay"]))
 scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=10)
