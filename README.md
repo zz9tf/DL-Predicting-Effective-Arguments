@@ -51,7 +51,24 @@ python -m spacy download en_core_web_sm
 | [train.py](code/train.py)                 | Defines functions that train the model, plot loss/accuracy for train/valid datasets, and make inference |
 | [run.py](code/run.py)                     | Trains the model, plot loss and accuracy                                                                |
 
-### Model's accuracy
+### Model's accuracy before preprocessing
+| Model | Bidirectional | Last Hidden | Loss on train | Loss on validation | 
+|-------|---------------|-------------|---------------|-----------------------------|
+| RNN   | True          | True        | 0.891         | 0.909               |
+| RNN   | True          | False       | 0.817         | 0.897               |
+| RNN   | False         | True        | 0.946         | 0.938               |
+| RNN   | False         | False       | 0.891         | 0.901               |
+| LSTM  | True          | True        | 0.891         | 0.899               |
+| LSTM  | True          | False       | 0.804         | 0.895               |
+| LSTM  | False         | True        | 0.946         | 0.938               |
+| LSTM  | False         | False       | 0.836         | 0.878               |
+| GRU   | True          | True        | 0.805         | 0.901               |
+| GRU   | True          | False       | 0.808         | 0.894               |
+| GRU   | False         | True        | 0.829         | 0.879               |
+| GRU   | False         | False       | 0.825         | 0.888               |
+| Bert  | NA            | NA          | 0.974         | 0.971               |
+
+### Model's accuracy after preprocessing
 | Model | Bidirectional | Last Hidden | Loss on train | Loss on validation | 
 |-------|---------------|-------------|---------------|-----------------------------|
 | RNN   | True          | True        | 0.917         | 0.929               |
