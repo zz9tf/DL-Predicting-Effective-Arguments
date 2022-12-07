@@ -83,7 +83,7 @@ python -m spacy download en_core_web_sm
 | GRU   | True          | False       | 0.815         | 0.884               |
 | GRU   | False         | True        | 0.833         | 0.885               |
 | GRU   | False         | False       | 0.831         | 0.893               |
-| Bert  | NA            | NA          | 0.974         | 0.971               |
+| Bert  | NA            | NA          | 0.910         | 0.919               |
 
 
 
