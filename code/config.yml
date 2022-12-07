@@ -3,12 +3,12 @@ general:
   BATCH_SIZE: 50
   split_ratio: 0.7
   data_information: False
-  model: BERT # (RNN, LSTM, GRU, BERT)
+  model: RNN # (RNN, LSTM, GRU, BERT)
 
 RNN:
   hidden_size: 16
   number_of_layers: 2
-  bidirectional: True
+  bidirectional: False
   dropout: 0.2
   last_hidden: True
   learning_rate: 0.0007
@@ -18,13 +18,13 @@ LSTM:
   number_of_layers: 2
   bidirectional: False
   dropout: 0.2
-  last_hidden: False
+  last_hidden: True
   learning_rate: 0.0007
 
 GRU:
   hidden_size: 16
   number_of_layers: 2
-  bidirectional: True
+  bidirectional: False
   dropout: 0.2
   last_hidden: True
   learning_rate: 0.0007
@@ -33,5 +33,5 @@ BERT:
   learning_rate: 2e-5
 
 training:
-  EPOCH_NUM: 6
-  weight_decay: 1e-5
+  EPOCH_NUM: 100
+  weight_decay: 1e-4

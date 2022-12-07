@@ -42,7 +42,11 @@ def lemmatizer(sent, wl):
     sent = [wl.lemmatize(tag[0], get_wordnet_pos(tag[1])) for idx, tag in enumerate(word_pos_tags)] # Map the position tag and lemmatize the word/token
     return " ".join(sent)
 
-df = pd.read_csv("../data/train.csv")
+df = pd.read_csv("../data/test.csv")
+df = df[df['discourse_type'] == 'Claim']
+df.to_csv("../data/testOnlyClaim.csv", index=False)
+input()
+
 
 wl = WordNetLemmatizer()
 for id in range(len(df)):
@@ -62,4 +66,5 @@ for id in range(len(df)):
     
 print()
 print("Finished")
-df.to_csv("../data/new_train.csv")
+df = df.dropna()
+df.to_csv("../data/new_test.csv", index=False)
