@@ -54,19 +54,22 @@ python -m spacy download en_core_web_sm
 ### Model's accuracy
 | Model | Bidirectional | Last Hidden | Loss on train | Loss on validation | 
 |-------|---------------|-------------|---------------|-----------------------------|
-| RNN   | True          | True        | ？？？         | ？？？              |
-| RNN   | True          | False       | ？？？         | ？？？              |
-| RNN   | False         | True        | ？？？         | ？？？              |
-| RNN   | False         | False       | ？？？         | ？？？              |
-| LSTM  | True          | True        | ？？？         | ？？？              |
-| LSTM  | True          | False       | ？？？         | ？？？              |
-| LSTM  | False         | True        | ？？？         | ？？？              |
-| LSTM  | False         | False       | ？？？         | ？？？              |
-| GRU   | True          | True        | ？？？         | ？？？              |
-| GRU   | True          | False       | ？？？         | ？？？              |
-| GRU   | False         | True        | ？？？         | ？？？              |
-| GRU   | False         | False       | ？？？         | ？？？              |
-| Bert  | NA            | NA          | ？？？         | ？？？              |
+| RNN   | True          | True        | 0.917         | 0.929               |
+| RNN   | True          | False       | 0.852         | 0.883               |
+| RNN   | False         | True        | 0.903         | 0.903               |
+| RNN   | False         | False       | 0.874         | 0.891               |
+| LSTM  | True          | True        | 0.854         | 0.888               |
+| LSTM  | True          | False       | 0.842         | 0.880               |
+| LSTM  | False         | True        | 0.869         | 0.869               |
+| LSTM  | False         | False       | 0.829         | 0.892               |
+| GRU   | True          | True        | 0.832         | 0.880               |
+| GRU   | True          | False       | 0.815         | 0.884               |
+| GRU   | False         | True        | 0.833         | 0.885               |
+| GRU   | False         | False       | 0.831         | 0.893               |
+| Bert  | NA            | NA          | 0.974         | 0.971               |
+
+
+
 
 ### Model structure
 
