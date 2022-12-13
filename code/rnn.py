@@ -26,7 +26,8 @@ class RNN(torch.nn.Module):
 
     def forward(self, batch_x):
         # init hidden input
-        hidden_input = torch.zeros(batch_x.shape[0], self.hidden_size)
+        hidden_input = torch.zeros(batch_x.shape[0], self.hidden_size).to('cuda:0' if torch.cuda.is_available() else 'cpu')
+        print(hidden_input)
 
         for word_id in range(batch_x.shape[-1]):
             embeddings = self.embedding_layer(batch_x[:, word_id])
@@ -70,7 +71,7 @@ class Fine_tune_rnn():
             'hidden_size': hidden_size,
             'target_classes': self.target_classes
         }
-        self.model = RNN(model_configs=model_configs)
+        self.model = RNN(model_configs=model_configs).to('cuda:0' if torch.cuda.is_available() else 'cpu')
         learning_rate = 0.0005
         self.loss_fn = self.model.get_loss_fn()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
@@ -91,8 +92,9 @@ class Fine_tune_rnn():
             epoch_loss = []
             start_time = time.time()
             for batch in self.train_iterator:
-                X = batch.discourse_text
-                Y = batch.discourse_effectiveness.to(torch.int64)
+                X, X_len = batch.discourse_text
+                X.to('cuda:0' if torch.cuda.is_available() else 'cpu')
+                Y = batch.discourse_effectiveness.to(torch.int64).to('cuda:0' if torch.cuda.is_available() else 'cpu')
                 Y_preds = self.model(X)
                 loss = self.loss_fn(Y_preds, Y)
                 epoch_loss.append(loss.item())
@@ -125,8 +127,9 @@ class Fine_tune_rnn():
         with torch.no_grad():
             Y_shuffled, Y_preds, losses = [], [], []
             for batch in iterator:
-                X = batch.discourse_text
-                Y = batch.discourse_effectiveness.to(torch.int64)
+                X, X_len = batch.discourse_text
+                X.to('cuda:0' if torch.cuda.is_available() else 'cpu')
+                Y = batch.discourse_effectiveness.to(torch.int64).to('cuda:0' if torch.cuda.is_available() else 'cpu')
                 Y_pred = self.model(X)
                 loss = self.loss_fn(Y_pred, Y)
                 losses.append(loss.item())
@@ -140,7 +143,7 @@ class Fine_tune_rnn():
             Y_shuffled = torch.cat(Y_shuffled)
             Y_preds = torch.cat(Y_preds)
             print("{} Loss : {:.3f}".format(dataset, torch.tensor(losses).mean()))
-            print("{} Acc : {:.3f}".format(dataset, accuracy_score(Y_shuffled.detach().numpy(), Y_preds.detach().numpy())))
+            print("{} Acc : {:.3f}".format(dataset, accuracy_score(Y_shuffled.cpu().numpy(), Y_preds.cpu().numpy())))
 
         if visualize:
             # Normalize by dividing every row by its sum
