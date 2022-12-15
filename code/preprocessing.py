@@ -21,7 +21,7 @@ def load_data(BATCH_SIZE=10,
     :param data_information: True if you want to view information of training datasets (default: False)
     :return: train_iterator, valid_iterator, test_iterator, TEXT, LABEL
     """
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True) # "bert-base-uncased"
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)  # "bert-base-uncased"
     current_path = os.getcwd()
     data_dir = '/../data/'
     train_data_path = os.path.join(current_path + data_dir, "train.csv")
@@ -29,12 +29,13 @@ def load_data(BATCH_SIZE=10,
     # Uncomment ther following line to transform the train.csv datasets for the BERT model
     if is_bert:
         train_df = pd.read_csv(train_data_path)
-        train_df["discourse_effectiveness"] = train_df["discourse_effectiveness"].replace(['Adequate','Effective','Ineffective'],[0,1,2])
+        train_df["discourse_effectiveness"] = train_df["discourse_effectiveness"].replace(
+            ['Adequate', 'Effective', 'Ineffective'], [0, 1, 2])
         sep = tokenizer.sep_token
-        train_df['discourse_text'] = train_df["discourse_type"]+ sep + train_df["discourse_text"]
+        train_df['discourse_text'] = train_df["discourse_type"] + sep + train_df["discourse_text"]
         train_df = train_df.drop(columns=["discourse_type"])
         print(train_df)
-        output_path = os.path.join(current_path + data_dir, "train_bert.csv")
+        output_path = os.path.join(current_path + data_dir, "train_eda_bert.csv")
         train_df.to_csv(output_path)
 
     # Model parameter
@@ -56,7 +57,7 @@ def load_data(BATCH_SIZE=10,
     test_fields = [("discourse_id", None), ("essay_id", None), ('discourse_text', TEXT), ("discourse_type", None)]
 
     if is_bert:
-        training_data = data.TabularDataset(path=os.path.join(current_path + data_dir, "train_bert.csv"), format='csv',
+        training_data = data.TabularDataset(path=os.path.join(current_path + data_dir, "train_eda_bert.csv"), format='csv',
                                             fields=train_fields, skip_header=True)
     else:
         training_data = data.TabularDataset(path=train_data_path, format='csv', fields=train_fields, skip_header=True)
@@ -65,13 +66,14 @@ def load_data(BATCH_SIZE=10,
     if is_bert:
         test_df = pd.read_csv(test_data_path)
         sep = tokenizer.sep_token
-        test_df['discourse_text'] = test_df["discourse_type"]+ sep + test_df["discourse_text"]
+        test_df['discourse_text'] = test_df["discourse_type"] + sep + test_df["discourse_text"]
         test_df = test_df.drop(columns=["discourse_type"])
         output_path = os.path.join(current_path + data_dir, "test_bert.csv")
         test_df.to_csv(output_path)
-    
+
     if is_bert:
-        test_data = data.TabularDataset(path=os.path.join(current_path + data_dir, "test_bert.csv"), format='csv', fields=test_fields, skip_header=True)
+        test_data = data.TabularDataset(path=os.path.join(current_path + data_dir, "test_bert.csv"), format='csv',
+                                        fields=test_fields, skip_header=True)
     else:
         test_data = data.TabularDataset(path=test_data_path, format='csv', fields=test_fields, skip_header=True)
 

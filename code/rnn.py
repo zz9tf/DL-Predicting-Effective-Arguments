@@ -7,6 +7,7 @@ from torch import nn
 from matplotlib import pyplot as plt
 import matplotlib.ticker as ticker
 
+
 class RNN(torch.nn.Module):
     def __init__(self, **kwargs):
         super(RNN, self).__init__()
